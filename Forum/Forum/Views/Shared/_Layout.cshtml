@@ -46,9 +46,21 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
-                <ul class="nav navbar-nav" style="float:right;">
-                    <li>@Html.ActionLink("Login", "", "")</li>
-                    <li>@Html.ActionLink("Register", "", "")</li>
+                <ul class="nav navbar-nav navbar-right">
+                    @{
+                        Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+
+                        if (korisnik != null)
+                        {
+                            <li class="navbar-text">Zdravo, @korisnik.korisnickoime</li>
+                            <li>@Html.ActionLink("Izloguj se", "Logout", "Korisnik")</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Loguj se", "Login", "Korisnik")</li>
+                            <li>@Html.ActionLink("Registruj se", "Registracija", "Korisnik")</li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
