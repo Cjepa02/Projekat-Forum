@@ -180,6 +180,8 @@
     <Content Include="Views\Korisnik\Login.cshtml" />
     <Content Include="Views\Korisnik\Registracija.cshtml" />
     <Content Include="Views\Korisnik\Promovisi.cshtml" />
+    <Content Include="Views\Home\Izmena.cshtml" />
+    <Content Include="Views\Korisnik\Izmena.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
