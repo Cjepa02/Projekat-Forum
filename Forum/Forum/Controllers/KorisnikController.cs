@@ -20,6 +20,7 @@ namespace Forum.Controllers
         public ActionResult Registracija(Korisnik korisnik)
         {
             dbContext.korisniks.Add(korisnik);
+            korisnik.tip_korisnika = "korisnik";
             dbContext.SaveChanges();
             return RedirectToAction("Index","Home","");
         }
@@ -59,6 +60,7 @@ namespace Forum.Controllers
         }
         public ActionResult Promovisi()
         {
+            ViewBag.Korisniks = dbContext.korisniks.ToList();
             return View();
         }
         [HttpPost]
