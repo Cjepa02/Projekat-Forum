@@ -9,6 +9,6 @@ namespace Forum.Models
     {
         public string Naslov { get; set; }
         public int Id_pod { get; set; }
-        public string Moderator { get; set; }s
+        public string Moderator { get; set; }
     }
 }
