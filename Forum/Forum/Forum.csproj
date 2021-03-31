@@ -179,6 +179,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Korisnik\Login.cshtml" />
     <Content Include="Views\Korisnik\Registracija.cshtml" />
+    <Content Include="Views\Korisnik\Promovisi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

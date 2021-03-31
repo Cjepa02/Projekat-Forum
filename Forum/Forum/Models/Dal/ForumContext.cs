@@ -13,5 +13,7 @@ namespace Forum.Models.Dal
 
         }
         public DbSet<Korisnik> korisniks { get; set; }
+        public DbSet<Podforum> podforums { get; set; }
+
     }
 }

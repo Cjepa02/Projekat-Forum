@@ -21,7 +21,7 @@ namespace Forum.Controllers
         {
             dbContext.korisniks.Add(korisnik);
             dbContext.SaveChanges();
-            return RedirectToAction("Registracija");
+            return RedirectToAction("Index","Home","");
         }
         public ActionResult Login()
         {
@@ -31,12 +31,7 @@ namespace Forum.Controllers
         public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
-            {
-                // Zelim da proverim da li u bazi postoji red u tabeli korisnik
-                // sa korisnickim imenom i lozinkom koji je prosledjen
-                // select * from korisnik where korisnikoIme = model.Korisnicko ime and
-                // lozinka = model.Lozinka
-
+            {        
                 ViewBag.Error = null;
 
                 Korisnik k = dbContext.korisniks.FirstOrDefault
@@ -56,6 +51,22 @@ namespace Forum.Controllers
             }
 
             return View();
+        }
+        public ActionResult IzlogujSe()
+        {
+            Session.Remove("korisnik");
+            return RedirectToAction("Index", "Home", "");
+        }
+        public ActionResult Promovisi()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Promovisi(Podforum model)
+        {
+            dbContext.podforums.Add(model);
+            dbContext.SaveChanges();
+            return RedirectToAction("Index", "Home", "");
         }
     }
 }

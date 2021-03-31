@@ -51,7 +51,11 @@
                         if (korisnik != null)
                         {
                             <li class="navbar-text">Zdravo, @korisnik.korisnickoime</li>
-                            <li>@Html.ActionLink("Izloguj se", "Logout", "Korisnik")</li>
+                            <li>@Html.ActionLink("Izloguj se", "IzlogujSe", "Korisnik")</li>
+                            if (korisnik.korisnickoime == "admin")
+                            {
+                                 <li>@Html.ActionLink("Promovisi moderatora", "Promovisi", "Korisnik")</li>
+                            }
                         }
                         else
                         {
