@@ -1,31 +1,61 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Početna";
 }
+<style>
+    .temalevo {
+        background-image: linear-gradient(180deg, #E9333C, #E9333C, #222);
+        border-bottom-left-radius: 15px;
+        border-top-left-radius: 15px;
+        height: 140px;
+        margin-bottom: 30px
+    }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+    .temadesno {
+        background-image: linear-gradient(180deg, #E9333C, #E9333C, #222);
+        border-bottom-right-radius: 15px;
+        border-top-right-radius: 15px;
+        height: 140px;
+        text-align: right;
+        margin-bottom: 30px
+    }
+</style>
+<div class="row container" style="width:100%;padding:0px;margin:0px;color:white;">
+    <div class="col-md-3" style="padding:0px">
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+
+
+    <div class="col-md-6" style="padding-right:15px">
+        <h2 style="color:white;padding:20px 0px 15px 0px">Najpopularnije teme</h2>
+        @{
+            for (int i = 1; i != 5; ++i)
+            {
+                <a style="color:white" href="https://www.youtube.com/watch?v=AJkmCnfn-G8&list=RDAJkmCnfn-G8&start_radio=1&ab_channel=AerodromTV">
+                    <div class="col-md-6 temalevo">
+                        <h2 style="margin-top:20px">O čemu je tema</h2>
+                        <p style="font-weight:bold;font-size:15px">
+                            Pitanje
+                        </p>
+                        <p style="font-weight:bold;font-size:15px">
+                            Ko je postavio: username
+                        </p>
+                    </div>
+                    <div class="col-md-6 temadesno">
+                        <p style="margin-top:30px">Pregleda: 0 pregleda</p>
+                        <p style="margin-top:-5px;line-height:95px">
+                            Vreme postavljanja: 13:02 PM
+                        </p>
+                    </div>
+                </a>
+            }
+        }
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+
+    <div style="position: -webkit-sticky!important;top:-45px;position:sticky">
+        <div class="col-md-3" style="padding:99px 15px 0px 0px">
+            <div style="border:1">
+                <img src="~/Content/user.png" width="50px" />
+            </div>
+        </div>
     </div>
 </div>
