@@ -2,18 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Forum.Models
 {
     public class Korisnik
     {
-        public int id { get; set; }
-        public string ime { get; set; }
-        public string prezime { get; set; }
-        public string korisnickoime { get; set; }
-        public string lozinka { get; set; }
-        public string tip_korisnika { get; set; } //Će metnemo enum ako bude trebalo
-        public string email { get; set; }
+        public int Id { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        public string Ime { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        public string Prezime { get; set; }
+        
+        [Column(TypeName = "VARCHAR")]
+        [Index(IsUnique = true)]
+        public string KorisnickoIme { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        public string Lozinka { get; set; }
+        public string Tip_korisnika { get; set; }
+        
+        [Column(TypeName = "VARCHAR")]
+        [Index(IsUnique = true)] 
+        public string Email { get; set; }
 
     }
 }

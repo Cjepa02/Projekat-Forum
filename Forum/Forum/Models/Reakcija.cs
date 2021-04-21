@@ -7,10 +7,9 @@ namespace Forum.Models
 {
     public class Reakcija
     {
-        public enum Tip { srce, smajli, place, stidljivko, mrgud, like, dislike }
-        public int IdReakcija { get; set; }
+        public int Id { get; set; }
+        public enum Tip { Srce, Smajli, Plač, Stidljivko, Mrgud, Like, Dislike }
         public Tip tip { get; set; }
-        public int IdKomentar { get; set; }
-        public int IdKorisnik { get; set; }
+        public int KorisnikId { get; set; }
     }
 }

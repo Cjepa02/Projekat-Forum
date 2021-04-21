@@ -9,6 +9,6 @@ namespace Forum.Models
     {
         public string Naslov { get; set; }
         public int Id { get; set; }
-        public string Moderator { get; set; }
+        public string KorisnikId { get; set; } 
     }
 }

@@ -60,12 +60,14 @@ namespace Forum.Controllers
         }
         public ActionResult Promovisi()
         {
+            //if admin
             ViewBag.Korisniks = dbContext.korisniks.ToList();
             return View();
         }
         [HttpPost]
         public ActionResult Promovisi(Podforum model)
         {
+            //if admin
             dbContext.podforums.Add(model);
             dbContext.SaveChanges();
             return RedirectToAction("Index", "Home", "");
@@ -73,7 +75,7 @@ namespace Forum.Controllers
         public ActionResult Izmena(int id)
         {
             Korisnik model = dbContext.korisniks
-                .FirstOrDefault(red => red.id == id);
+                .FirstOrDefault(red => red.Id == id);
             return View(model);
         }
 
@@ -81,8 +83,8 @@ namespace Forum.Controllers
         public ActionResult Izmena(Korisnik paketic)
         {
             Korisnik model = dbContext.korisniks
-            .FirstOrDefault(red => red.id == paketic.id);
-            model.lozinka = paketic.lozinka;
+            .FirstOrDefault(red => red.Id == paketic.Id);
+            model.Lozinka = paketic.Lozinka;
             dbContext.SaveChanges();
             return RedirectToAction("Index", "Home", "");
         }

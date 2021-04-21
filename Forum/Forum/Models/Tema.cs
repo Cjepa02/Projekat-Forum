@@ -7,11 +7,11 @@ namespace Forum.Models
 {
     public class Tema
     {
-        public int Podforum { get; set; }
+        public int Id { get; set; }
+        public int PodforumId { get; set; }
         public string Tekst { get; set; }
         public string Naslov { get; set; }
-        public int Korisnik { get; set; }
-        public int IdTema { get; set; }
+        public int KorisnikId { get; set; }
         public DateTime DatumVreme { get; set; }
         public bool Izmenjen { get; set; }
     }

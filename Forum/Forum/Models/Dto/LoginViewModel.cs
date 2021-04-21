@@ -9,10 +9,10 @@ namespace Forum.Models.Dto
     public class LoginViewModel
     {
         [Required(ErrorMessage = "Korisnicko ime mora imati vrednost!")]
-        public string korisnickoime { get; set; }
+        public string KorisnickoIme { get; set; }
 
         [Required(ErrorMessage = "Lozinka mora imati vrednost!")]
-        public string lozinka { get; set; }
+        public string Lozinka { get; set; }
 
 
     }

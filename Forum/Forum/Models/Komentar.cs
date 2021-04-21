@@ -7,11 +7,11 @@ namespace Forum.Models
 {
     public class Komentar
     {
-        public int IdTema { get; set; }
-        public int IdKorisnik { get; set; }
+        public int Id { get; set; }
+        public int TemaId { get; set; }
+        public int KorisnikId { get; set; }
         public string Tekst { get; set; }
         public DateTime Kreiranje { get; set; }
         public bool Izmenjen { get; set; }
-        public int IdKomentar { get; set; }
     }
 }
