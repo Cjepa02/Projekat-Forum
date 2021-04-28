@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Forum.Models.Dal;
 using Forum.Models;
 using Forum.Models.Dto;
+using System.Web.UI;
 
 namespace Forum.Controllers
 {
@@ -20,7 +21,7 @@ namespace Forum.Controllers
         public ActionResult Registracija(Korisnik korisnik)
         {
             dbContext.korisniks.Add(korisnik);
-            korisnik.tip_korisnika = "korisnik";
+            korisnik.Tip_korisnika = "korisnik";
             dbContext.SaveChanges();
             return RedirectToAction("Index","Home","");
         }
@@ -36,8 +37,8 @@ namespace Forum.Controllers
                 ViewBag.Error = null;
 
                 Korisnik k = dbContext.korisniks.FirstOrDefault
-                    (korisnik => korisnik.korisnickoime == model.korisnickoime &&
-                        korisnik.lozinka == model.lozinka);
+                    (korisnik => korisnik.KorisnickoIme == model.KorisnickoIme &&
+                        korisnik.Lozinka == model.Lozinka);
 
                 if (k == null)
                 {
@@ -60,14 +61,25 @@ namespace Forum.Controllers
         }
         public ActionResult Promovisi()
         {
-            //if admin
-            ViewBag.Korisniks = dbContext.korisniks.ToList();
-            return View();
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if (korisnik != null)
+            {
+                if (korisnik.Tip_korisnika == "admin")
+                {
+                    ViewBag.Korisniks = dbContext.korisniks.ToList();
+                    return View();
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return null;
         }
         [HttpPost]
         public ActionResult Promovisi(Podforum model)
-        {
-            //if admin
+        {         
             dbContext.podforums.Add(model);
             dbContext.SaveChanges();
             return RedirectToAction("Index", "Home", "");
@@ -76,6 +88,7 @@ namespace Forum.Controllers
         {
             Korisnik model = dbContext.korisniks
                 .FirstOrDefault(red => red.Id == id);
+            ViewBag.Korisniks = model.Lozinka;
             return View(model);
         }
 
@@ -83,9 +96,18 @@ namespace Forum.Controllers
         public ActionResult Izmena(Korisnik paketic)
         {
             Korisnik model = dbContext.korisniks
-            .FirstOrDefault(red => red.Id == paketic.Id);
-            model.Lozinka = paketic.Lozinka;
-            dbContext.SaveChanges();
+            .FirstOrDefault(red => 1 == paketic.Id);
+            string staralozinka = model.Lozinka;
+            if (staralozinka == paketic.Lozinka)
+            {
+                model.Lozinka = paketic.Lozinka;
+                Response.Write("<script>alert('Lozinka uspešno promenjena!')</script>");
+                dbContext.SaveChanges();
+            }
+            else if (staralozinka != paketic.Lozinka)
+            {
+                Response.Write("<script>alert('Stara lozinka netačna!')</script>");
+            }
             return RedirectToAction("Index", "Home", "");
         }
     }

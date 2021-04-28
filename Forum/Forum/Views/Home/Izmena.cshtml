@@ -15,23 +15,19 @@
         <h4>Korisnik</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.id)
-
- 
-    
+        @Html.HiddenFor(model => model.Id)
+  
         <div class="form-group">
-            @Html.LabelFor(model => model.lozinka, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Lozinka, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="password" name="lozinka" id="lozinka" class="form-control" />
-                @Html.ValidationMessageFor(model => model.lozinka, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Lozinka, "", new { @class = "text-danger" })
             </div>
         </div>
-
-   
     
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Sačuvaj" class="btn btn-default" />
             </div>
         </div>
     </div>

@@ -9,26 +9,31 @@
 </head>
 <body>
     <style>
+        body {
+            background: #181716;
+        }
         ul li a {
-            color: black !important;
+            color: white !important;
             opacity: 1 !important;
             transition: all 0.5s;
         }
 
         li a:hover {
-            color: black !important;
+            color: white !important;
             transform: scale(1.3);
         }
 
         .heder a:hover {
-            color: black !important;
+            color: white !important;
         }
 
         .heder {
-            background: #363636;
-            background-image: linear-gradient(180deg, white,white,white,white,white,white,#222);
+            background: #E9333C;
             border: none;
             height: 55px
+        }
+        .heder a{
+           font-weight:bold;
         }
     </style>
     <div class="navbar navbar-inverse navbar-fixed-top heder">
@@ -39,8 +44,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                   <!-- <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>-->
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @{
@@ -48,18 +53,18 @@
 
                         if (korisnik != null)
                         {
-                            <li class="navbar-text">Zdravo, @korisnik.korisnickoime</li>
+                            <li class="navbar-text">Zdravo, @korisnik.KorisnickoIme</li>
                             <li>@Html.ActionLink("Izloguj se", "IzlogujSe", "Korisnik")</li>
-                            <li>@Html.ActionLink("Promeni lozinku", "Izmena", new { id = korisnik.id }))</li>
+                            <li>@Html.ActionLink("Promeni lozinku","Izmena","Korisnik", new { id = korisnik.Id } , null)</li>
 
-                            if (korisnik.tip_korisnika == "admin")
+                            if (korisnik.Tip_korisnika == "admin")
                             {
                                 <li>@Html.ActionLink("Promovisi moderatora", "Promovisi", "Korisnik")</li>
                             }
                         }
                         else
                         {
-                            <li>@Html.ActionLink("Loguj se", "Login", "Korisnik")</li>
+                            <li>@Html.ActionLink("Uloguj se", "Login", "Korisnik")</li>
                             <li>@Html.ActionLink("Registruj se", "Registracija", "Korisnik")</li>
                         }
                     }

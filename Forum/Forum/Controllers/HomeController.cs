@@ -18,22 +18,6 @@ namespace Forum.Controllers
         {
             return View();
         }
-        public ActionResult Izmena(int id)
-        {
-            Korisnik model = dbContext.korisniks
-                .FirstOrDefault(red => red.id == id);
-            return View(model);
-        }
-
-        [HttpPost]
-        public ActionResult Izmena(Korisnik paketic)
-        {
-            Korisnik model = dbContext.korisniks
-            .FirstOrDefault(red => red.id == paketic.id);
-            model.lozinka = paketic.lozinka;
-            dbContext.SaveChanges();
-            return RedirectToAction("Index", "Home", "");
-        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
