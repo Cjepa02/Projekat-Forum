@@ -20,6 +20,7 @@ namespace Forum.Models
         public string KorisnickoIme { get; set; }
         [Column(TypeName = "VARCHAR")]
         public string Lozinka { get; set; }
+        public string TrenutnaLozinka { get; set; }
         public string Tip_korisnika { get; set; }
         
         [Column(TypeName = "VARCHAR")]

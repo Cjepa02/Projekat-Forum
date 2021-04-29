@@ -1,5 +1,6 @@
 ﻿@model Forum.Models.Korisnik
 
+
 @{
     ViewBag.Title = "Izmena";
 }
@@ -7,24 +8,30 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="col-md-6 form-horizontal" style="margin-top:2%">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-6 form-horizontal" style="margin-top:19%">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id) 
         <div class="form-group">
-            <p class="control-label col-md-2" style="color:white">Stara lozinka</p>
-            <div class="col-md-10">
-                <input type="password" name="staralozinka" id="staralozinka" class="form-control" />
-                @Html.ValidationMessageFor(model => model.Lozinka, "", new { lozinka = staralozinka })
+            <p class="control-label col-md-2" style="color:white">Trenuta lozinka</p>
+            <div class="col-md-6">
+                <input type="password" name="TrenutnaLozinka" id="TrenutnaLozinka" class="form-control" />
+                @Html.ValidationMessageFor(model => model.TrenutnaLozinka, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             <p class="control-label col-md-2" style="color:white">Nova lozinka</p>
-            <div class="col-md-10">
-                <input type="password" name="Lozinka" id="lozinka" class="form-control" />
-                @Html.ValidationMessageFor(model => model.Lozinka, "", new { @class = "text-danger" })
+            <div class="col-md-6">
+                <input type="password" name="Lozinka" id="Lozinka" class="form-control" />
+                @{
+                    if (ViewBag.Error != null)
+                    {
+                        <p class="text-danger" style="margin-top:1.5%">@ViewBag.Error</p>
+                    }
+                }
             </div>
-        </div> 
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Sačuvaj" class="btn btn-default" />

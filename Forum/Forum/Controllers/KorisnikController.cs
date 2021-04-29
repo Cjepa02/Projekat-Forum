@@ -20,10 +20,30 @@ namespace Forum.Controllers
         [HttpPost]
         public ActionResult Registracija(Korisnik korisnik)
         {
-            dbContext.korisniks.Add(korisnik);
-            korisnik.Tip_korisnika = "korisnik";
-            dbContext.SaveChanges();
-            return RedirectToAction("Index","Home","");
+            List<Korisnik> Korisnik = dbContext.korisniks.ToList();
+            string username = korisnik.KorisnickoIme;
+            string email = korisnik.Email;
+            for (int i = 0; i < Korisnik.Count; i++)
+            {
+                if (username == Korisnik[i].KorisnickoIme.ToString())
+                {
+                    ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "već postoji!";
+                    if (email == Korisnik[i].Email.ToString())
+                    {
+                        ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "i unetom i-mejl adresom već postoji!";
+                    }
+                    else if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com"))
+                    {
+                        ViewBag.Error = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                    }
+                }
+                if (email == Korisnik[i].Email.ToString())
+                {
+                    ViewBag.Error = "Korisnik sa i-mejlom " + email + " " + "već postoji!";
+                }
+            }
+          
+            return View();          
         }
         public ActionResult Login()
         {
@@ -35,11 +55,9 @@ namespace Forum.Controllers
             if (ModelState.IsValid)
             {        
                 ViewBag.Error = null;
-
                 Korisnik k = dbContext.korisniks.FirstOrDefault
                     (korisnik => korisnik.KorisnickoIme == model.KorisnickoIme &&
                         korisnik.Lozinka == model.Lozinka);
-
                 if (k == null)
                 {
                     ViewBag.Error = "Pogresni kredencijali";
@@ -51,13 +69,21 @@ namespace Forum.Controllers
                     return RedirectToAction("Index", "Home", "");
                 }
             }
-
             return View();
         }
         public ActionResult IzlogujSe()
         {
-            Session.Remove("korisnik");
-            return RedirectToAction("Index", "Home", "");
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if(korisnik == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if(korisnik != null)
+            {
+                Session.Remove("korisnik");
+                return RedirectToAction("Index", "Home", "");
+            }
+            return View();
         }
         public ActionResult Promovisi()
         {
@@ -86,29 +112,46 @@ namespace Forum.Controllers
         }
         public ActionResult Izmena(int id)
         {
-            Korisnik model = dbContext.korisniks
-                .FirstOrDefault(red => red.Id == id);
-            ViewBag.Korisniks = model.Lozinka;
-            return View(model);
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else if (korisnik != null)
+            {
+                Korisnik model = dbContext.korisniks
+                    .FirstOrDefault(red => red.Id == id);
+                ViewBag.Korisniks = model.Lozinka;
+                return View(model);
+            }
+            return View();
         }
 
         [HttpPost]
         public ActionResult Izmena(Korisnik paketic)
         {
-            Korisnik model = dbContext.korisniks
-            .FirstOrDefault(red => 1 == paketic.Id);
-            string staralozinka = model.Lozinka;
-            if (staralozinka == paketic.Lozinka)
+            Korisnik model = dbContext.korisniks.FirstOrDefault
+                    (korisnik => korisnik.Id == paketic.Id);
+            model.TrenutnaLozinka = model.Lozinka;
+            if (model.TrenutnaLozinka == paketic.TrenutnaLozinka)
             {
-                model.Lozinka = paketic.Lozinka;
-                Response.Write("<script>alert('Lozinka uspešno promenjena!')</script>");
-                dbContext.SaveChanges();
+                if (model.Lozinka == paketic.Lozinka)
+                {
+                    ViewBag.Error = "Nova lozinka mora biti različita od stare!";
+                }
+                else if (model.Lozinka != paketic.Lozinka)
+                {
+                    model.Lozinka = paketic.Lozinka;
+                    model.TrenutnaLozinka = model.Lozinka;
+                    dbContext.SaveChanges();
+                    return RedirectToAction("Index", "Home", "");
+                }
             }
-            else if (staralozinka != paketic.Lozinka)
+            else if(model.TrenutnaLozinka != paketic.TrenutnaLozinka)
             {
-                Response.Write("<script>alert('Stara lozinka netačna!')</script>");
-            }
-            return RedirectToAction("Index", "Home", "");
+                ViewBag.Error = "Trenutna lozinka netačna!";
+            }          
+            return View();
         }
     }
 }
