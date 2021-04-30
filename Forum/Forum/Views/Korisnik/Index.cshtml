@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Forum.Models.Podforum
+@{
     ViewBag.Title = "Početna";
 }
 <style>
@@ -14,30 +15,28 @@
 
     </div>
 
-
     <div class="col-md-6" style="padding-right:15px">
         <h2 style="color:white;padding:20px 0px 15px 0px">Podforumi</h2>
         @{
-            for (int i = 1; i != 5; ++i)
+            for (int i = 0; i < ViewBag.Podforums.Count; i++)
             {
-                <a style="color:white" href="https://localhost:44384/Korisnik/Login">
+                <a style="color:white" href="@Url.Action("Podforum", "Korisnik", new { id = ViewBag.Podforums[i].Id })">
                     <div class="col-md-12 podforum">
-                        <h2 style="margin-top:20px">Podforum</h2>
+                        <h2 style="margin-top:20px">@ViewBag.Podforums[i].Naslov</h2>
                         <p style="font-weight:bold;font-size:15px">
-                            Moderator
+                            Moderator: @ViewBag.Podforums[i].KorisnikKorisnickoIme
                         </p>
                         <p style="font-weight:bold;font-size:15px">
-                            Pregleda
+                            Pregleda: 0
                         </p>
-                         <p style="font-weight:bold;font-size:15px; margin-top:-105px" align="right">
-                            Ko je postavio: username
-                        </p>
-                    </div>                   
+                        <!-- <p style="font-weight:bold;font-size:15px; margin-top:-105px" align="right">
+                        Ko je postavio: username
+                    </p>-->
+                    </div>
                 </a>
             }
         }
     </div>
-
     <div style="position: -webkit-sticky!important;top:-45px;position:sticky">
         <div class="col-md-3" style="padding:99px 15px 0px 0px">
             <div>

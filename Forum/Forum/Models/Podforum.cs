@@ -9,7 +9,8 @@ namespace Forum.Models
     {
         public string Naslov { get; set; }
         public int Id { get; set; }
-        public string KorisnikId { get; set; } 
+        public int KorisnikId { get; set; } 
+        public string KorisnikKorisnickoIme { get; set; }
 
     }
 }

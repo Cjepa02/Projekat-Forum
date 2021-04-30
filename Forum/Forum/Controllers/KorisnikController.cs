@@ -13,6 +13,24 @@ namespace Forum.Controllers
     public class KorisnikController : Controller
     {
         private ForumContext dbContext = new ForumContext();
+        public ActionResult Index()
+        {
+            ViewBag.Podforums = dbContext.podforums.ToList();
+            return View();
+        }
+        public ActionResult Podforum(int id)
+        {
+            Podforum podforum = dbContext.podforums.FirstOrDefault(red => red.Id == id);
+            List<Tema> tema = dbContext.temas.ToList();
+            for (int i = 0; i < tema.Count; i++)
+            {
+                if (tema[i].PodforumId == id)
+                {
+                    ViewBag.Tema += tema[i];
+                }
+            }
+            return View(podforum);
+        }
         public ActionResult Registracija()
         {
             return View();
@@ -23,27 +41,58 @@ namespace Forum.Controllers
             List<Korisnik> Korisnik = dbContext.korisniks.ToList();
             string username = korisnik.KorisnickoIme;
             string email = korisnik.Email;
-            for (int i = 0; i < Korisnik.Count; i++)
+            if (Korisnik.Count == 0)
             {
-                if (username == Korisnik[i].KorisnickoIme.ToString())
+                if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com") && !korisnik.Email.Contains("@smart.edu.rs"))
                 {
-                    ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "već postoji!";
-                    if (email == Korisnik[i].Email.ToString())
-                    {
-                        ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "i unetom i-mejl adresom već postoji!";
-                    }
-                    else if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com"))
-                    {
-                        ViewBag.Error = "Molimo Vas unesite ispravnu i-mejl adresu!";
-                    }
-                }
-                if (email == Korisnik[i].Email.ToString())
-                {
-                    ViewBag.Error = "Korisnik sa i-mejlom " + email + " " + "već postoji!";
+                    ViewBag.Error = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                    goto ErorGoto;
                 }
             }
-          
-            return View();          
+            else if (Korisnik.Count != 0)
+            {
+                for (int i = 0; i < Korisnik.Count; i++)
+                {
+                    if (username == Korisnik[i].KorisnickoIme.ToString() && email == Korisnik[i].Email.ToString())
+                    {
+                        ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "i unetom i-mejl adresom već postoji!";
+                        if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com") && !korisnik.Email.Contains("@smart.edu.rs"))
+                        {
+                            ViewBag.Error2 = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                        }
+                        goto ErorGoto;
+                    }
+                    if (username != Korisnik[i].KorisnickoIme.ToString() && email == Korisnik[i].Email.ToString())
+                    {
+                        ViewBag.Error = "Korisnik sa unetom i-mejl adresom već postoji!";
+                        if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com") && !korisnik.Email.Contains("@smart.edu.rs"))
+                        {
+                            ViewBag.Error2 = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                        }
+                        goto ErorGoto;
+                    }
+                    if (username == Korisnik[i].KorisnickoIme.ToString() && email != Korisnik[i].Email.ToString())
+                    {
+                        ViewBag.Error = "Korisnik sa korisničkim imenom " + username + " " + "već postoji!";
+                        if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com") && !korisnik.Email.Contains("@smart.edu.rs"))
+                        {
+                            ViewBag.Error2 = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                        }
+                        goto ErorGoto;
+                    }
+                    if (!korisnik.Email.Contains("@gmail.com") && !korisnik.Email.Contains("@yahoo.com") && !korisnik.Email.Contains("@smart.edu.rs"))
+                    {
+                        ViewBag.Error2 = "Molimo Vas unesite ispravnu i-mejl adresu!";
+                        goto ErorGoto;
+                    }
+                }
+            }
+            dbContext.korisniks.Add(korisnik);
+            korisnik.Tip_korisnika = "korisnik";
+            dbContext.SaveChanges();
+            return RedirectToAction("Index", "Korisnik", "");
+        ErorGoto:;
+            return View();
         }
         public ActionResult Login()
         {
@@ -66,7 +115,7 @@ namespace Forum.Controllers
                 else
                 {
                     Session.Add("korisnik", k);
-                    return RedirectToAction("Index", "Home", "");
+                    return RedirectToAction("Index", "Korisnik", "");
                 }
             }
             return View();
@@ -76,12 +125,12 @@ namespace Forum.Controllers
             Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
             if(korisnik == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Korisnik");
             }
             else if(korisnik != null)
             {
                 Session.Remove("korisnik");
-                return RedirectToAction("Index", "Home", "");
+                return RedirectToAction("Index", "Korisnik", "");
             }
             return View();
         }
@@ -90,7 +139,7 @@ namespace Forum.Controllers
             Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
             if (korisnik == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Korisnik");
             }
             else if (korisnik != null)
             {
@@ -99,23 +148,26 @@ namespace Forum.Controllers
                     ViewBag.Korisniks = dbContext.korisniks.ToList();
                     return View();
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Korisnik");
             }
             return null;
         }
         [HttpPost]
         public ActionResult Promovisi(Podforum model)
-        {         
+        {
+            Korisnik korisnik = dbContext.korisniks.FirstOrDefault
+                    (red => red.KorisnickoIme == model.KorisnikKorisnickoIme);
+            model.KorisnikId = korisnik.Id;
             dbContext.podforums.Add(model);
             dbContext.SaveChanges();
-            return RedirectToAction("Index", "Home", "");
+            return RedirectToAction("Index", "Korisnik", "");
         }
         public ActionResult Izmena(int id)
         {
             Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
             if (korisnik == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Korisnik");
             }
             else if (korisnik != null)
             {
@@ -144,7 +196,7 @@ namespace Forum.Controllers
                     model.Lozinka = paketic.Lozinka;
                     model.TrenutnaLozinka = model.Lozinka;
                     dbContext.SaveChanges();
-                    return RedirectToAction("Index", "Home", "");
+                    return RedirectToAction("Index", "Korisnik", "");
                 }
             }
             else if(model.TrenutnaLozinka != paketic.TrenutnaLozinka)
