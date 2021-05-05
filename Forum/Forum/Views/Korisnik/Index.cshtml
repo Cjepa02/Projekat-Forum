@@ -1,7 +1,5 @@
 ﻿@model Forum.Models.Podforum
-@{
-    ViewBag.Title = "Početna";
-}
+@{ ViewBag.Title = "Početna"; }
 <style>
     .podforum {
         background-image: linear-gradient(180deg, #E9333C, #E9333C, #222);
@@ -12,30 +10,34 @@
 </style>
 <div class="row container" style="width:100%;padding:0px;margin:0px;color:white;">
     <div class="col-md-3" style="padding:0px">
-
     </div>
-
     <div class="col-md-6" style="padding-right:15px">
         <h2 style="color:white;padding:20px 0px 15px 0px">Podforumi</h2>
-        @{
-            for (int i = 0; i < ViewBag.Podforums.Count; i++)
+        @{ for (int i = 0; i < ViewBag.Podforums.Count; i++)
             {
-                <a style="color:white" href="@Url.Action("Podforum", "Korisnik", new { id = ViewBag.Podforums[i].Id })">
-                    <div class="col-md-12 podforum">
-                        <h2 style="margin-top:20px">@ViewBag.Podforums[i].Naslov</h2>
-                        <p style="font-weight:bold;font-size:15px">
-                            Moderator: @ViewBag.Podforums[i].KorisnikKorisnickoIme
-                        </p>
-                        <p style="font-weight:bold;font-size:15px">
-                            Pregleda: 0
-                        </p>
-                        <!-- <p style="font-weight:bold;font-size:15px; margin-top:-105px" align="right">
-                        Ko je postavio: username
-                    </p>-->
-                    </div>
-                </a>
-            }
-        }
+<a style="color:white" href="@Url.Action("Podforum", "Korisnik", new { id = ViewBag.Podforums[i].Id })">
+    <div class="col-md-12 podforum">
+        <h2 style="margin-top:20px">@ViewBag.Podforums[i].Naslov</h2>
+        <p style="font-weight:bold;font-size:15px">
+             @{
+                 if (ViewBag.Podforums[i].KorisnikKorisnickoIme == null || ViewBag.Podforums[i].KorisnikKorisnickoIme == null)
+                 {
+                    <p>Ovaj podforum nema moderatora</p>
+                 } 
+                 else if(ViewBag.Podforums[i].KorisnikKorisnickoIme != null || ViewBag.Podforums[i].KorisnikKorisnickoIme != null)
+                 {
+                    <p>Moderator: @ViewBag.Podforums[i].KorisnikKorisnickoIme</p>
+                 }             
+             }
+        </p>
+            <p style="font-weight:bold;font-size:15px">
+                Pregleda: 0
+            </p>
+            <!-- <p style="font-weight:bold;font-size:15px; margin-top:-105px" align="right">
+            Ko je postavio: username
+        </p>-->
+        </div>
+</a> } }
     </div>
     <div style="position: -webkit-sticky!important;top:-45px;position:sticky">
         <div class="col-md-3" style="padding:99px 15px 0px 0px">

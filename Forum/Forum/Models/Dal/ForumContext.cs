@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 
 namespace Forum.Models.Dal
 {
@@ -10,11 +6,10 @@ namespace Forum.Models.Dal
     {
         public ForumContext() : base("Forum")
         {
-
         }
+
         public DbSet<Korisnik> korisniks { get; set; }
         public DbSet<Podforum> podforums { get; set; }
         public DbSet<Tema> temas { get; set; }
-
     }
 }

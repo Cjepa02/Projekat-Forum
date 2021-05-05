@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Forum.Models.Dto
 {
@@ -13,7 +9,5 @@ namespace Forum.Models.Dto
 
         [Required(ErrorMessage = "Lozinka mora imati vrednost!")]
         public string Lozinka { get; set; }
-
-
     }
 }

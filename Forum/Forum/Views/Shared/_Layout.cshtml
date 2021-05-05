@@ -12,6 +12,7 @@
         body {
             background: #181716;
         }
+
         ul li a {
             color: white !important;
             opacity: 1 !important;
@@ -32,9 +33,10 @@
             border: none;
             height: 55px
         }
-        .heder a{
-           font-weight:bold;
-        }
+
+            .heder a {
+                font-weight: bold;
+            }
     </style>
     <div class="navbar navbar-inverse navbar-fixed-top heder">
         <div class="container">
@@ -46,25 +48,23 @@
                     <li>@Html.ActionLink("Početna", "Index", "Korisnik")</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    @{
+                    @{ 
                         Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
-
                         if (korisnik != null)
                         {
-                            <li class="navbar-text">Zdravo, @korisnik.KorisnickoIme</li>
-                            <li>@Html.ActionLink("Izloguj se", "IzlogujSe", "Korisnik")</li>
-                            <li>@Html.ActionLink("Promeni lozinku","Izmena","Korisnik", new { id = korisnik.Id } , null)</li>
-
+                          <li>@Html.ActionLink("Promeni lozinku", "Izmena", "Korisnik", new { id = korisnik.Id }, null)</li> 
                             if (korisnik.Tip_korisnika == "admin")
                             {
-                                <li>@Html.ActionLink("Promovisi moderatora", "Promovisi", "Korisnik")</li>
+                                 <li>@Html.ActionLink("Promovisi moderatora", "Promovisi", "Korisnik")</li> 
+                                 <li>@Html.ActionLink("Napravi podforum", "NapraviPodforum", "Korisnik")</li> 
                             }
+                          <li>@Html.ActionLink("Izloguj se", "IzlogujSe", "Korisnik")</li> 
                         }
                         else
                         {
-                            <li>@Html.ActionLink("Uloguj se", "Login", "Korisnik")</li>
-                            <li>@Html.ActionLink("Registruj se", "Registracija", "Korisnik")</li>
-                        }
+                          <li>@Html.ActionLink("Uloguj se", "Login", "Korisnik")</li>
+                          <li>@Html.ActionLink("Registruj se", "Registracija", "Korisnik")</li> 
+                        } 
                     }
                 </ul>
             </div>
