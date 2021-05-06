@@ -211,7 +211,7 @@ namespace Forum.Controllers
 
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
-        {
+            {
             if (ModelState.IsValid)
             {
                 ViewBag.Error = null;
@@ -357,6 +357,37 @@ namespace Forum.Controllers
             }
         ErorGoto:;
             return View();
+        }
+        
+        public ActionResult PrikazTeme(int id, bool kliknuto)
+        {
+            List<Tema> temic = dbContext.temas.ToList();
+            for (int i = 0; i < temic.Count; i++)
+            {
+                if (temic[i].Id == id)
+                {
+                    ViewBag.Tema = temic[i];
+                }
+            }
+            ViewBag.Kliknuto = kliknuto;
+            return View();
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult PrikazTeme( Komentar komentar)
+        {
+
+            return View();
+        }
+
+
+
+        public ActionResult DodajKomentar(int id)
+        {            
+            return RedirectToAction("PrikazTeme", "Korisnik", new { id = id, kliknuto = true });        
         }
     }
 }

@@ -186,6 +186,7 @@
     <Content Include="Views\Korisnik\Tema.cshtml" />
     <Content Include="Views\Korisnik\NapraviPodforum.cshtml" />
     <Content Include="Views\Korisnik\TemaIzmena.cshtml" />
+    <Content Include="Views\Korisnik\PrikazTeme.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

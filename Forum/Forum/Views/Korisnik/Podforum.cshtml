@@ -40,7 +40,7 @@
             {
                 DateTime datum = ViewBag.Tema[i].DatumVreme;
                 DateTime datum1 = DateTime.Parse(datum.ToString());
-                <a style="color:white" href="@Url.Action("PrikazTeme", "Korisnik", new { id = ViewBag.Tema[i].Id })">
+                <a style="color:white" href="@Url.Action("PrikazTeme", "Korisnik", new { id = ViewBag.Tema[i].Id, kliknuto = false })">
                 <div class="col-md-12 podforum">
                             <h2 style="margin-top:20px">
                                 @ViewBag.Tema[i].Naslov
