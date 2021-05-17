@@ -303,7 +303,7 @@ namespace Forum.Controllers
             return null;
         }
         [HttpPost]
-        public ActionResult NapraviPodforum(Podforum model)
+        public ActionResult NapraviPodforum(Podforum model)  
         {
             Korisnik korisnik = dbContext.korisniks.FirstOrDefault
                     (red => red.KorisnickoIme == model.KorisnikKorisnickoIme);
@@ -365,6 +365,7 @@ namespace Forum.Controllers
 
         public ActionResult PrikazTeme(int id, bool kliknuto)
         {
+            List<Reakcija> reakcijas = dbContext.reakcijas.ToList();
             List<Tema> temic = dbContext.temas.ToList();
             List<Komentar> komentarcic = dbContext.komentars.ToList();
             List<Komentar> komentarciczatemu = new List<Komentar>();
@@ -385,7 +386,8 @@ namespace Forum.Controllers
                         }
                     }
                 }
-            }            
+            }
+            ViewBag.Reakcije = reakcijas;
             ViewBag.Kliknuto = kliknuto;
             return View();
         }
@@ -446,6 +448,49 @@ namespace Forum.Controllers
         ErorGoto2:;
             return RedirectToAction("Index", "Korisnik", "");
 
+        }
+        public ActionResult Reakcija(int id, int tip)
+        {
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik != null)
+            {
+                Komentar komentar = dbContext.komentars.FirstOrDefault(k => k.Id == id);
+                int temaid = komentar.TemaId;
+                Reakcija reakcija = new Reakcija();
+                int korisnikid = korisnik.Id;
+                reakcija.KorisnikId = korisnikid;
+                reakcija.KorisnikKorisnickoIme = korisnik.KorisnickoIme;
+                reakcija.KomentarId = id;
+                if (tip == 0)
+                {
+                    reakcija.tip = Models.Reakcija.Tip.Like;
+                }
+                else if (tip == 1)
+                {
+                    reakcija.tip = Models.Reakcija.Tip.Dislike;
+                }
+                else if (tip == 2)
+                {
+                    reakcija.tip = Models.Reakcija.Tip.Srce;
+                }
+                else if (tip == 3)
+                {
+                    reakcija.tip = Models.Reakcija.Tip.Smajli;
+                }
+                else if (tip == 4)
+                {
+                    reakcija.tip = Models.Reakcija.Tip.Ljut;
+                }
+                dbContext.reakcijas.Add(reakcija);
+                dbContext.SaveChanges();
+                return RedirectToAction("PrikazTeme", "Korisnik", new { id = temaid, kliknuto = false });
+            }
+            else if (korisnik == null)
+            {
+                goto ErorGoto;
+            }
+        ErorGoto:;
+            return RedirectToAction("Login", "Korisnik");
         }
         public ActionResult IzmeniKomentar(int id)
         {

@@ -1,5 +1,6 @@
 ﻿@model Forum.Models.Tema
 @{ ViewBag.Title = @ViewBag.PodforumNaslov; }
+
 <style>
     .podforum {
         background-image: linear-gradient(180deg, #00800D, #00800D, transparent);
@@ -83,10 +84,10 @@
             </p>
             <p style="font-weight:bold;font-size:12px;display:inline">@datum3.ToString("dd")/@datum3.ToString("MM")/@datum3.ToString("yyyy") @datum3.ToString("h:mm tt")</p>
             @{ if (ViewBag.Komentar[i].Izmenjen == true)
-                                    {
-                                        //<a href="@Url.Action("TemaIzmena", "Korisnik", new { id = ViewBag.Tema[i].Id })">
-                <p style="font-weight:bold;font-size:12px;display:inline;color:turquoise;margin-left:10px">Izmenjeno</p> //</a>
-            } }
+                {
+                    //<a href="@Url.Action("TemaIzmena", "Korisnik", new { id = ViewBag.Tema[i].Id })">
+    <p style="font-weight:bold;font-size:12px;display:inline;color:turquoise;margin-left:10px">Izmenjeno</p> //</a>
+} }
 
             @{ if (korisnik != null)
                 {
@@ -99,29 +100,41 @@
                                     <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise;margin-right: 15px">Izmeni</p>
 
                                 </a> }
-                                                    } }
-            <a href="@Url.Action("IzmeniKomentar", "Korisnik", new { id = ViewBag.Komentar[i].Id })">
-                <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise;margin-right: 15px">Izmeni</p>
-
-            </a>
-
-
+                        } }
 
         </h2>
-            <select name="cars" id="cars">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="opel">Opel</option>
-                <option value="audi">Audi</option>
-            </select>
+        @{ if (korisnik != null)
+            {
+    <a href="@Url.Action("Reakcija", "Korisnik", new { id = ViewBag.Komentar[i].Id, tip = 0})">
+        <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:darkblue;margin-left:10px">Like</p>
+
+    </a>
+                            <a href="@Url.Action("Reakcija", "Korisnik", new { id = ViewBag.Komentar[i].Id, tip = 1})">
+                                <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:darkred;margin-left:10px">Dislike</p>
+
+                            </a>
+                                                    <a href="@Url.Action("Reakcija", "Korisnik", new { id = ViewBag.Komentar[i].Id, tip = 2})">
+                                                        <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:Red;margin-left:10px">Srce</p>
+
+                                                    </a>
+                                                                            <a href="@Url.Action("Reakcija", "Korisnik", new { id = ViewBag.Komentar[i].Id, tip = 3})">
+                                                                                <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:yellow;margin-left:10px">Smajli</p>
+
+                                                                            </a>
+                                                                                                    <a href="@Url.Action("Reakcija", "Korisnik", new { id = ViewBag.Komentar[i].Id, tip = 4})">
+                                                                                                        <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:Red;margin-left:10px">Jut</p>
+
+                                                                                                    </a> } }
 
 
         <p style="word-break: break-all;background:none;height:1%;border:none">@ViewBag.Komentar[i].Tekst</p>
-
-    </div> // </a>
+        <a style="font-weight:bold;font-size:12px;color:white" href="#" data-toggle="tooltip" title="@for (int z = 0; z < ViewBag.Reakcije.Count; z++) { if (ViewBag.Reakcije[z].KomentarId == ViewBag.Komentar[i].Id) { 
+            @ViewBag.Reakcije[z].tip  @ViewBag.Reakcije[z].KorisnikKorisnickoIme } } ">Reakcije</a>
+</div> // </a>
                     }
                 }
         }
+
     </div>
     <div style="position: -webkit-sticky!important;top:-45px;position:sticky">
         <div class="col-md-3" style="padding:99px 15px 0px 0px">
@@ -131,3 +144,8 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
