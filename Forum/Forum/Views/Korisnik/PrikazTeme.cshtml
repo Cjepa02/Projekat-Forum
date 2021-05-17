@@ -2,77 +2,126 @@
 @{ ViewBag.Title = @ViewBag.PodforumNaslov; }
 <style>
     .podforum {
-        background-image: linear-gradient(180deg, #E9333C, #E9333C, #222);
+        background-image: linear-gradient(180deg, #00800D, #00800D, transparent);
         border-radius: 15px;
         height: 140px;
-        margin-bottom: 30px;
+        margin-bottom: 4%;
+    }
+    .komentar {
+        background-image: linear-gradient(180deg, #4682B4, #4682B4);
+        margin-bottom:1%;
+        border-radius:15px;
+        height: 140px;
     }
 
     .novatemadugme input {
         border: none;
-        background: none;
-        margin-top: 60px;
-        padding-top: 28px;
+        background: white;
+        margin-top: 10px;
     }
 
     .novatemadugme {
+        padding-top:3%;
+        margin-top:3%;
         position: -webkit-sticky;
         position: sticky;
         top: 0;
-        font-size: 35px;
     }
 </style>
-<div class="row container" style="width:100%;padding:0px;margin:0px;color:white;">
     <div class="col-md-3 novatemadugme">
         @{ if (ViewBag.Kliknuto == true)
             {
-                    
-                <div class="form-group">
-                    <p>Vaš komentar</p>
-                    <textarea class="form-control"></textarea>
-                    <input type="submit" value="Uloguj se" class="btn btn-default" />
-                </div>
-                }
-
+                 @Html.Action("Komentar", "Korisnik")
             }
+        }
 
     </div>
-    <div class="col-md-6" style="padding-right:15px">
-        <h2 style="color:white;padding:30px 0px 15px 5px">@ViewBag.PodforumNaslov - Teme</h2>
-        @{             
-
-            DateTime datum = ViewBag.Tema.DatumVreme;
+<div class="row container" style="width:100%;padding:0px;margin:0px;color:white;">
+    <div class="col-md-6" style="padding-right:15px;margin-top:5%">
+        @{ DateTime datum = ViewBag.Tema.DatumVreme;
             DateTime datum1 = DateTime.Parse(datum.ToString());
+    <div class="col-md-12 podforum">
+        <h2 style="margin-top:20px">
+            @ViewBag.Tema.Naslov
+            <p style="font-weight:bold;font-size:12px;display:inline">@datum1.ToString("dd")/@datum1.ToString("MM")/@datum1.ToString("yyyy") @datum1.ToString("h:mm tt")</p>
+            @{ Forum.Models.Korisnik korisnikulogovan = Session["korisnik"] as Forum.Models.Korisnik;
+                if (korisnikulogovan != null)
+                {
+                    if (korisnikulogovan.Id == ViewBag.Tema.KorisnikId || korisnikulogovan.Id == ViewBag.PodforumModerator)
+                    {
+                    <a href="@Url.Action("TemaIzmena", "Korisnik", new { id = ViewBag.Tema.Id })">
+        <p style="font-weight:bold;font-size:12px;display:inline;color:deepskyblue;margin-left:10px">Izmena</p>
+    </a> }
+} }
+            
+        </h2>
+        <p style="font-weight:bold;font-size:15px">
+            @ViewBag.Tema.Tekst
+        </p>
+        <p style="font-weight:bold;font-size:15px;display:inline">
+            Postavio: @ViewBag.Tema.KorisnikKorisnickoIme
+            @{ Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+                if (korisnik != null)
+                {
+    <a style="color:white" href="@Url.Action("DodajKomentar", "Korisnik", new { id = ViewBag.Tema.Id })">
+    <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:5px;color:turquoise">Dodaj komentar</p>
+    </a> }
+            }
+            </p>
+        </div><h2>Komentari</h2>
+        if (ViewBag.Komentar != null)
+        {
+            for (int i = 0; i < ViewBag.Komentar.Count; i++)
+            {
+                DateTime datum2 = ViewBag.Komentar[i].Kreiranje;
+                DateTime datum3 = DateTime.Parse(datum2.ToString());
+                //<a style="color:white" href="@Url.Action("PrikazTeme", "Korisnik", new { id = ViewBag.Tema[i].Id, kliknuto = false })">
+    <div class="col-md-12 komentar" style="height:0%">
+        <h2 style="margin-top:0px">
+            <p style="font-weight:bold;font-size:15px;display:inline">
+                @ViewBag.Komentar[i].KorisnikKorisnickoIme
+            </p>
+            <p style="font-weight:bold;font-size:12px;display:inline">@datum3.ToString("dd")/@datum3.ToString("MM")/@datum3.ToString("yyyy") @datum3.ToString("h:mm tt")</p>
+            @{ if (ViewBag.Komentar[i].Izmenjen == true)
+                                    {
+                                        //<a href="@Url.Action("TemaIzmena", "Korisnik", new { id = ViewBag.Tema[i].Id })">
+                <p style="font-weight:bold;font-size:12px;display:inline;color:turquoise;margin-left:10px">Izmenjeno</p> //</a>
+            } }
 
-                <div class="col-md-12 podforum">
-                    <h2 style="margin-top:20px">
-                        @ViewBag.Tema.Naslov
-                        <p style="font-weight:bold;font-size:12px;display:inline">@datum1.ToString("dd")/@datum1.ToString("MM")/@datum1.ToString("yyyy") @datum1.ToString("h:mm tt")</p>
-                        @{ Forum.Models.Korisnik korisnikulogovan = Session["korisnik"] as Forum.Models.Korisnik;
-                            if (korisnikulogovan != null)
-                            {
-                                if (korisnikulogovan.Id == ViewBag.Tema.KorisnikId || korisnikulogovan.Id == ViewBag.PodforumModerator)
-                                {
-                <a href="@Url.Action("TemaIzmena", "Korisnik", new { id = ViewBag.Tema.Id })">
-                    <p style="font-weight:bold;font-size:12px;display:inline;color:deepskyblue;margin-left:10px">Izmena</p>
-                </a> }
-                            } }
-                        @{ if (ViewBag.Tema.Izmenjen == true)
-                            {
-                <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise">Izmenjeno</p> } }
-                    </h2>
-                    <p style="font-weight:bold;font-size:15px">
-                        @ViewBag.Tema.Tekst
-                    </p>
-                    <p style="font-weight:bold;font-size:15px;display:inline">
-                        Postavio: @ViewBag.Tema.KorisnikKorisnickoIme
-                        <a style="color:white" href="@Url.Action("DodajKomentar", "Korisnik", new { id = ViewBag.Tema.Id })">
-                        <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:5px;color:turquoise">Dodaj komentar</p>
-                        </a>
-                    </p>
-                </div>
+            @{ if (korisnik != null)
+                {
+                    if (ViewBag.Komentar[i].KorisnikId == korisnikulogovan.Id || ViewBag.Komentar[i].KorisnikKorisnickoIme == korisnikulogovan.KorisnickoIme || korisnikulogovan.Tip_korisnika == "admin" || ViewBag.Moderator == korisnikulogovan.Id)
+                    {
+    <a href="@Url.Action("ObrisiKomentar", "Korisnik", new { id = ViewBag.Komentar[i].Id })">
+        <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise">Obriši</p>
+    </a>
+                                <a href="@Url.Action("IzmeniKomentar", "Korisnik", new { id = ViewBag.Komentar[i].Id })">
+                                    <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise;margin-right: 15px">Izmeni</p>
 
-    }
+                                </a> }
+                                                    } }
+            <a href="@Url.Action("IzmeniKomentar", "Korisnik", new { id = ViewBag.Komentar[i].Id })">
+                <p style="font-weight:bold;font-size:12px;display:inline;float:right;margin-top:15px;color:turquoise;margin-right: 15px">Izmeni</p>
+
+            </a>
+
+
+
+        </h2>
+            <select name="cars" id="cars">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+
+
+        <p style="word-break: break-all;background:none;height:1%;border:none">@ViewBag.Komentar[i].Tekst</p>
+
+    </div> // </a>
+                    }
+                }
+        }
     </div>
     <div style="position: -webkit-sticky!important;top:-45px;position:sticky">
         <div class="col-md-3" style="padding:99px 15px 0px 0px">

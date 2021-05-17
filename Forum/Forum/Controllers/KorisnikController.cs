@@ -14,7 +14,6 @@ namespace Forum.Controllers
 
         public ActionResult Index()
         {
-            //Nizovi su mi nepotrebni, mogao sam samo uz liste da napravim ovo (možda)
             List<Podforum> podforums = dbContext.podforums.ToList();
             List<Korisnik> korisniks = dbContext.korisniks.ToList();
             int[] korisnikid = new int[korisniks.Count];
@@ -40,6 +39,7 @@ namespace Forum.Controllers
                     dbContext.SaveChanges();
                 }
             }
+            podforums.Sort((p, q) => q.BrojPregleda.CompareTo(p.BrojPregleda));
             ViewBag.Podforums = podforums;
             return View();
         }
@@ -47,6 +47,10 @@ namespace Forum.Controllers
         public ActionResult Podforum(int id)
         {
             Podforum podforum = dbContext.podforums.FirstOrDefault(red => red.Id == id);
+            int brojpregleda = podforum.BrojPregleda;
+            brojpregleda++;
+            podforum.BrojPregleda = brojpregleda;
+            dbContext.SaveChanges();
             List<Tema> tema = dbContext.temas.ToList();
             List<Tema> temapodforum = new List<Tema>();
             List<Tema> temapodforumskracentekst = new List<Tema>();
@@ -86,7 +90,7 @@ namespace Forum.Controllers
                 int podforumid = tema.PodforumId;
                 Podforum podforum = dbContext.podforums.FirstOrDefault(red => red.Id == podforumid);
                 int moderator = podforum.KorisnikId;
-                if (tema.KorisnikId == korisnik.Id || tema.KorisnikId == moderator)
+                if (podforum.KorisnikId == korisnik.Id || tema.KorisnikId == moderator || korisnik.Tip_korisnika == "admin" || tema.KorisnikId == korisnik.Id) 
                 {
                     ViewBag.Tema = tema;
                     return View();
@@ -358,36 +362,131 @@ namespace Forum.Controllers
         ErorGoto:;
             return View();
         }
-        
+
         public ActionResult PrikazTeme(int id, bool kliknuto)
         {
             List<Tema> temic = dbContext.temas.ToList();
+            List<Komentar> komentarcic = dbContext.komentars.ToList();
+            List<Komentar> komentarciczatemu = new List<Komentar>();
             for (int i = 0; i < temic.Count; i++)
             {
                 if (temic[i].Id == id)
                 {
                     ViewBag.Tema = temic[i];
+                    for (int j = 0; j < komentarcic.Count; j++)
+                    {
+                        if (komentarcic[j].TemaId == temic[i].Id)
+                        {
+                            komentarciczatemu.Add(komentarcic[j]);
+                            ViewBag.Komentar = komentarciczatemu;
+                            int TemaPodforumId = temic[i].PodforumId;
+                            Podforum podforum = dbContext.podforums.FirstOrDefault(p => p.Id == TemaPodforumId);
+                            ViewBag.Moderator = podforum.KorisnikId;
+                        }
+                    }
                 }
-            }
+            }            
             ViewBag.Kliknuto = kliknuto;
             return View();
         }
 
-
-
-
         [HttpPost]
-        public ActionResult PrikazTeme( Komentar komentar)
+        public ActionResult PrikazTeme(Komentar komentar, int id)
         {
-
-            return View();
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            int korisnikid = korisnik.Id;
+            string korisnikkorisnickoime = korisnik.KorisnickoIme;
+            komentar.KorisnikKorisnickoIme = korisnikkorisnickoime;
+            komentar.KorisnikId = korisnikid;
+            komentar.Kreiranje = DateTime.Now;
+            komentar.TemaId = id;
+            komentar.Izmenjen = false;
+            dbContext.komentars.Add(komentar);
+            dbContext.SaveChanges();
+            return RedirectToAction("PrikazTeme", "Korisnik", new { id = id, kliknuto = false });
         }
-
-
-
         public ActionResult DodajKomentar(int id)
-        {            
-            return RedirectToAction("PrikazTeme", "Korisnik", new { id = id, kliknuto = true });        
+        {
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik == null)
+            {
+                goto ErorGoto;
+            }
+            else if (korisnik != null)
+            {
+                return RedirectToAction("PrikazTeme", "Korisnik", new { id = id, kliknuto = true });
+            }
+        ErorGoto:;
+            return RedirectToAction("Login", "Korisnik", "");
+        }
+        public ActionResult ObrisiKomentar(int id)
+        {
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik == null)
+            {
+                goto ErorGoto;
+            }
+            if (korisnik != null)
+            {
+                Komentar komentar = dbContext.komentars.FirstOrDefault(k => k.Id == id);
+                int temaid = komentar.TemaId;
+                Tema tema = dbContext.temas.FirstOrDefault(t => t.Id == temaid);
+                Podforum podforum = dbContext.podforums.FirstOrDefault(p => p.Id == tema.PodforumId);
+                if (korisnik.Id == komentar.KorisnikId || korisnik.KorisnickoIme == komentar.KorisnikKorisnickoIme || korisnik.Tip_korisnika == "admin" || korisnik.Id == podforum.KorisnikId || korisnik.KorisnickoIme == podforum.KorisnikKorisnickoIme)
+                {
+                    dbContext.komentars.Remove(komentar);
+                    dbContext.SaveChanges();
+                    return RedirectToAction("PrikazTeme", "Korisnik", new { id = temaid, kliknuto = false });
+                }
+                else
+                    goto ErorGoto2;
+            }
+        ErorGoto:;
+            return RedirectToAction("Login", "Korisnik", "");
+        ErorGoto2:;
+            return RedirectToAction("Index", "Korisnik", "");
+
+        }
+        public ActionResult IzmeniKomentar(int id)
+        {
+            Forum.Models.Korisnik korisnik = Session["korisnik"] as Forum.Models.Korisnik;
+            if (korisnik == null)
+            {
+                goto ErorGoto;
+            }
+            if (korisnik != null)
+            {
+                Komentar komentar = dbContext.komentars.FirstOrDefault(k => k.Id == id);
+                int temaid = komentar.TemaId;
+                Tema tema = dbContext.temas.FirstOrDefault(t => t.Id == temaid);
+                Podforum podforum = dbContext.podforums.FirstOrDefault(p => p.Id == tema.PodforumId);
+                if (korisnik.Id == komentar.KorisnikId || korisnik.KorisnickoIme == komentar.KorisnikKorisnickoIme || korisnik.Tip_korisnika == "admin" || korisnik.Id == podforum.KorisnikId || korisnik.KorisnickoIme == podforum.KorisnikKorisnickoIme)
+                {
+                    ViewBag.Komentar = komentar;
+                    return View();
+                }
+                else
+                    goto ErorGoto2;
+            }
+        ErorGoto:;
+            return RedirectToAction("Login", "Korisnik", "");
+        ErorGoto2:;
+            return RedirectToAction("Index", "Korisnik", "");
+        }
+        [HttpPost]
+        public ActionResult IzmeniKomentar(Komentar model)
+        {
+            Komentar komentar = dbContext.komentars.FirstOrDefault(red => red.Id == model.Id);
+            komentar.Tekst = model.Tekst;
+            komentar.Izmenjen = true;
+            int TemaId = komentar.TemaId;
+            dbContext.SaveChanges();
+            return RedirectToAction("PrikazTeme", "Korisnik", new { id = TemaId, kliknuto = false }); 
+        }
+        [ChildActionOnly]
+        public ActionResult Komentar()
+        {
+            return PartialView();
         }
     }
 }

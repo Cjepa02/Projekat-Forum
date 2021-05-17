@@ -6,5 +6,6 @@
         public int Id { get; set; }
         public int KorisnikId { get; set; }
         public string KorisnikKorisnickoIme { get; set; }
+        public int BrojPregleda { get; set; }
     }
 }

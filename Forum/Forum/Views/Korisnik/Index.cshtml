@@ -2,7 +2,7 @@
 @{ ViewBag.Title = "Početna"; }
 <style>
     .podforum {
-        background-image: linear-gradient(180deg, #E9333C, #E9333C, #222);
+        background-image: linear-gradient(180deg, #00800D, #00800D, transparent);
         border-radius: 15px;
         height: 140px;
         margin-bottom: 30px;
@@ -29,9 +29,8 @@
                     <p>Moderator: @ViewBag.Podforums[i].KorisnikKorisnickoIme</p>
                  }             
              }
-        </p>
             <p style="font-weight:bold;font-size:15px">
-                Pregleda: 0
+               Pregleda: @ViewBag.Podforums[i].BrojPregleda
             </p>
             <!-- <p style="font-weight:bold;font-size:15px; margin-top:-105px" align="right">
             Ko je postavio: username
